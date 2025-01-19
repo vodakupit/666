@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>666</title>
+</head>
+<body>
+    <h1>666</h1>
+    <p>666</p>
+    <script>
+        // Check for gamepad support
+        window.addEventListener("gamepadconnected", (event) => {
+            const gamepad = navigator.getGamepads()[event.gamepad.index];
+            console.log("Gamepad connected:", gamepad);
+            startVibration(gamepad);
+        });
+
+        function startVibration(gamepad) {
+            if (!gamepad) return;
+
+            const interval = setInterval(() => {
+                // Ensure the gamepad is still connected
+                const updatedGamepad = navigator.getGamepads()[gamepad.index];
+                if (!updatedGamepad) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                // Attempt to vibrate (if supported)
+                try {
+                    if (updatedGamepad.vibrationActuator) {
+                        updatedGamepad.vibrationActuator.playEffect("dual-rumble", {
+                            startDelay: 0,
+                            duration: 500, // Vibrates for 0.5s
+                            weakMagnitude: 1.0,
+                            strongMagnitude: 1.0
+                        });
+                    }
+                } catch (error) {
+                    console.error("Vibration failed:", error);
+                    clearInterval(interval);
+                }
+            }, 1); // Repeats every 0.5 seconds
+        }
+    </script>
+</body>
+</html>
